@@ -48,6 +48,18 @@ class TodoAccess {
       .promise();
     return queryResult;
   }
+  async deleteTodo(Key: {
+    todoId: string;
+    userId: string;
+  }): Promise<DocumentClient.DeleteItemOutput> {
+    const deleteResult = await this.docClient
+      .delete({
+        TableName: tableName,
+        Key,
+      })
+      .promise();
+    return deleteResult;
+  }
 }
 
 function createDynamoDBClient() {

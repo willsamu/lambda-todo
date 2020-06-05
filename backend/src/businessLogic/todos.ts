@@ -46,6 +46,13 @@ export const updateTodo = async (
   return result;
 };
 
+export const deleteTodo = async (todoId: string, userId: string) => {
+  logger.info("Deleting todo", { userId, todoId });
+  const result = await TodoAccessClient.deleteTodo({ userId, todoId });
+  logger.info("Deleted Todo: ", { result });
+  return result;
+};
+
 export const listTodos = async (userId: string) => {
   console.log(`JWT Token recieved: ${userId}`);
   logger.info(`Trying to list todos for user ${userId}..`);
