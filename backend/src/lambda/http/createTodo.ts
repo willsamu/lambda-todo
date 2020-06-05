@@ -7,19 +7,16 @@ import {
 } from "aws-lambda";
 
 import { CreateTodoRequest } from "../../requests/CreateTodoRequest";
-// import { getToken, getUserId } from "../auth/auth0Authorizer";
 import { createTodo } from "../../businessLogic/todos";
+import { getUserId } from "../utils";
 
 export const handler: APIGatewayProxyHandler = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
   const newTodo: CreateTodoRequest = JSON.parse(event.body);
 
-  // const jwtToken: string = getToken(event.headers.Authorization);
-  // FIXME: Mocked Data
-  const jwtToken = "helloWorld";
-
-  const newItem = await createTodo(newTodo, jwtToken);
+  const userId: string = getUserId(event);
+  const newItem = await createTodo(newTodo, userId);
 
   return {
     statusCode: 201,
@@ -28,7 +25,7 @@ export const handler: APIGatewayProxyHandler = async (
       "Access-Control-Allow-Credentials": true,
     },
     body: JSON.stringify({
-      newItem,
+      item: newItem,
     }),
   };
 };

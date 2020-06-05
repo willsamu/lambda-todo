@@ -51,6 +51,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
         name: this.state.newTodoName,
         dueDate
       })
+      console.log(`Todo reacieved: ${newTodo}`)
       this.setState({
         todos: [...this.state.todos, newTodo],
         newTodoName: ''
@@ -64,7 +65,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     try {
       await deleteTodo(this.props.auth.getIdToken(), todoId)
       this.setState({
-        todos: this.state.todos.filter(todo => todo.todoId != todoId)
+        todos: this.state.todos.filter((todo) => todo.todoId != todoId)
       })
     } catch {
       alert('Todo deletion failed')

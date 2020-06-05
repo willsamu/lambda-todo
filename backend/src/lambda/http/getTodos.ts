@@ -5,24 +5,19 @@ import * as middy from "middy";
 import { cors } from "middy/middlewares";
 import { listTodos } from "../../businessLogic/todos";
 import { createLogger } from "../../utils/logger";
+import { getUserId } from "../utils";
 
 const logger = createLogger("getTodos");
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     logger.info("Event: ", { event });
-    // TODO: Get all TODO items for a current user
-
-    // const jwtToken: string = getToken(event.headers.Authorization);
-    // FIXME: Mocked Data
-    const jwtToken = "helloWorld";
-
-    const listTodosResult = await listTodos(jwtToken);
+    const listTodosResult = await listTodos(getUserId(event));
     if (listTodosResult.Items.length !== 0)
       return {
         statusCode: 200,
         body: JSON.stringify({
-          ...listTodosResult,
+          items: listTodosResult.Items,
         }),
       };
 

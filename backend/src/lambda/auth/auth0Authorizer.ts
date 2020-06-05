@@ -114,8 +114,3 @@ export function getToken(authHeader: string): string {
 
   return token;
 }
-
-export function getUserId(jwtToken: string): string {
-  const decodedJwt = decode(jwtToken) as JwtToken;
-  return decodedJwt.sub;
-}
