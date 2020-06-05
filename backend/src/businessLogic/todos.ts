@@ -4,6 +4,7 @@ import TodoAccess from "../dataLayer/todoAccess";
 import { CreateTodoRequest } from "../requests/CreateTodoRequest";
 import { createLogger } from "../utils/logger";
 import { UpdateTodoRequest } from "../requests/UpdateTodoRequest";
+import { getAttachmentUrl } from "../auth/utils";
 
 const TodoAccessClient = new TodoAccess();
 const logger = createLogger("Todos...");
@@ -24,6 +25,7 @@ export const createTodo = async (
     createdAt: new Date().toISOString(),
     done: false,
     ...createTodoRequest,
+    attachmentUrl: getAttachmentUrl(todoId),
   });
 };
 
