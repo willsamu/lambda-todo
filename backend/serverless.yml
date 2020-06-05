@@ -1,26 +1,33 @@
 org: willsamuel
-app: serverless-todo-app-app
+# app: serverless-todo-app-app
 service:
   name: serverless-todo-app
 
 plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
-  - serverless-aws-documentation
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
+  memorySize: 512
 
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'eu-central-1'}
 
-  tracing:
-    lambda: false # TODO: Implement later
+  # tracing:
+  #   lambda: false # TODO: Implement later
 
   environment:
-    INDEX_NAME: Todo-Index
-    TODOS_TABLE: Todos-${self:provider.stage}
+    INDEX_NAME: Todo-Index-createdAt
+    TODO_TABLE: Todos-${self:provider.stage}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:Query
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODO_TABLE}
 
 functions:
   # Auth:
@@ -82,25 +89,35 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: partitionKey
+          - AttributeName: userId
             AttributeType: S
-          - AttributeName: sortKey
+          - AttributeName: todoId
             AttributeType: S
-          - AttributeName: indexKey
+          - AttributeName: createdAt
             AttributeType: S
+          # - AttributeName: indexKey
+          #   AttributeType: S
+          # - AttributeName: name
+          #   AttributeType: S
+          # - AttributeName: dueDate
+          #   AttributeType: S
+          # - AttributeName: done
+          #   AttributeType: S
+          # - AttributeName: attachmentUrl
+          #   AttributeType: S
         KeySchema:
-          - AttributeName: partitionKey
+          - AttributeName: userId
             KeyType: HASH
-          - AttributeName: sortKey
+          - AttributeName: todoId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.TODOS_TABLE}
+        TableName: ${self:provider.environment.TODO_TABLE}
         LocalSecondaryIndexes:
           - IndexName: ${self:provider.environment.INDEX_NAME}
             KeySchema:
-              - AttributeName: partitionKey
+              - AttributeName: userId
                 KeyType: HASH
-              - AttributeName: indexKey
+              - AttributeName: createdAt
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL # What attributes will be copied to an index
