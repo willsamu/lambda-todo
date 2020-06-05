@@ -15,6 +15,20 @@ export function parseUserId(jwtToken: string): string {
   return decodedJwt.sub;
 }
 
+/**
+ * @description Returns a valid url to access corresponding file of todo-task
+ * @param  {string} todoId
+ * @returns string
+ */
 export function getAttachmentUrl(todoId: string): string {
   return `https://${bucketName}.s3.${region}.amazonaws.com/${todoId}`;
+}
+
+/**
+ * @description Wraps certificate key in PSM header and footer
+ * @param  {string} key
+ * @returns {string} certificate
+ */
+export function formatToPsm(cert: string): string {
+  return `-----BEGIN CERTIFICATE-----\n${cert}\n-----END CERTIFICATE-----`;
 }
