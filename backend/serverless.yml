@@ -34,8 +34,8 @@ provider:
       Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODO_TABLE}/index/${self:provider.environment.INDEX_NAME}
 
 functions:
-  # Auth:
-  #   handler: src/lambda/auth/auth0Authorizer.handler
+  Auth:
+    handler: src/lambda/auth/auth0Authorizer.handler
 
   # TODO: Configure this function
   GetTodos:
@@ -44,6 +44,8 @@ functions:
       - http:
           method: get
           path: todos
+          authorizer: Auth
+          cors: true
 
   # TODO: Configure this function
   CreateTodo:
@@ -52,6 +54,8 @@ functions:
       - http:
           method: post
           path: todos
+          authorizer: Auth
+          cors: true
 
   # TODO: Configure this function
   # UpdateTodo:
