@@ -13,6 +13,7 @@ export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     logger.info("Event: ", { event });
     const listTodosResult = await listTodos(getUserId(event));
+
     if (listTodosResult.Items.length !== 0)
       return {
         statusCode: 200,

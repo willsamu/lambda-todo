@@ -3,9 +3,11 @@ import { v4 as uuid } from "uuid";
 import TodoAccess from "../dataLayer/todoAccess";
 import { CreateTodoRequest } from "../requests/CreateTodoRequest";
 import { createLogger } from "../utils/logger";
+import { UpdateTodoRequest } from "../requests/UpdateTodoRequest";
 
 const TodoAccessClient = new TodoAccess();
-const logger = createLogger("createTodo");
+const logger = createLogger("Todos...");
+
 export const createTodo = async (
   createTodoRequest: CreateTodoRequest,
   userId: string,
@@ -23,6 +25,25 @@ export const createTodo = async (
     done: false,
     ...createTodoRequest,
   });
+};
+
+export const updateTodo = async (
+  updateTodoRequest: UpdateTodoRequest,
+  todoId: string,
+  userId: string,
+) => {
+  logger.info("Updating todo...", { userId, todoId, updateTodoRequest });
+  const { name, dueDate, done } = updateTodoRequest;
+  const updateParams: Object = {
+    Key: { userId, todoId },
+    ExpressionAttributeValues: {
+      ":n": name,
+      ":t": dueDate,
+      ":d": done,
+    },
+  };
+  const result = await TodoAccessClient.updateTodo(updateParams);
+  return result;
 };
 
 export const listTodos = async (userId: string) => {

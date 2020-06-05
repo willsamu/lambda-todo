@@ -20,6 +20,21 @@ class TodoAccess {
     return todoInput;
   }
 
+  async updateTodo(params: any): Promise<DocumentClient.UpdateItemOutput> {
+    const { Key, ExpressionAttributeValues } = params;
+    const updateResult = await this.docClient
+      .update({
+        TableName: tableName,
+        Key,
+        UpdateExpression: "set #n=:n, dueDate=:t, done=:d",
+        ExpressionAttributeNames: { "#n": "name" },
+        ExpressionAttributeValues,
+        ReturnValues: "UPDATED_NEW",
+      })
+      .promise();
+    return updateResult;
+  }
+
   async listTodos(userId: string): Promise<DocumentClient.QueryOutput> {
     const queryResult = await this.docClient
       .query({
