@@ -8,9 +8,8 @@ plugins:
   - serverless-reqvalidator-plugin
   - serverless-iam-roles-per-function
 
-# Uncomment to enable individual packaging
-# package:
-#   individually: true
+package:
+  individually: true
 
 provider:
   name: aws
@@ -20,32 +19,12 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'eu-central-1'}
 
-  # tracing:
-  #   lambda: false # TODO: Implement later
-
   environment:
     INDEX_NAME: Todo-Index-createdAt
     TODO_TABLE: Todos-${self:provider.stage}
     TODO_ITEMS_BUCKET: lambda-todo-${self:provider.stage}
     URL_EXPIRATION_TIME: 3000
 
-  # iamRoleStatements:
-  #   - Effect: Allow
-  #     Action:
-  #       - dynamodb:PutItem
-  #       - dynamodb:UpdateItem
-  #       - dynamodb:DeleteItem
-  #       - dynamodb:Query
-  #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODO_TABLE}
-  #   - Effect: Allow
-  #     Action:
-  #       - dynamodb:Query
-  #     Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODO_TABLE}/index/${self:provider.environment.INDEX_NAME}
-  #   - Effect: Allow
-  #     Action:
-  #       - s3:PutObject
-  #       - s3:GetObject
-  #     Resource: arn:aws:s3:::${self:provider.environment.TODO_ITEMS_BUCKET}/*
 custom:
   documentation:
     api:
@@ -142,7 +121,6 @@ functions:
           - dynamodb:DeleteItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODO_TABLE}
 
-  # TODO: Configure this function
   GenerateUploadUrl:
     handler: src/lambda/http/generateUploadUrl.handler
     role: GenerateUploadUrlRole
