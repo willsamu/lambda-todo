@@ -1,13 +1,36 @@
-import 'source-map-support/register'
+import "source-map-support/register";
 
-import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import * as middy from "middy";
+import { cors } from "middy/middlewares";
 
-import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
+import { UpdateTodoRequest } from "../../requests/UpdateTodoRequest";
+import { getUserId } from "../utils";
+import { updateTodo } from "../../businessLogic/todos";
 
-export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const todoId = event.pathParameters.todoId
-  const updatedTodo: UpdateTodoRequest = JSON.parse(event.body)
+export const handler = middy(
+  async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+    const todoId = event.pathParameters.todoId;
+    const updatedTodo: UpdateTodoRequest = JSON.parse(event.body);
+    const userId: string = getUserId(event);
+    const result = await updateTodo(updatedTodo, todoId, userId);
 
-  // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
-  return undefined
-}
+    if (result)
+      // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
+      return {
+        statusCode: 204,
+        body: "",
+      };
+
+    return {
+      statusCode: 409,
+      body: "",
+    };
+  },
+);
+
+handler.use(
+  cors({
+    credentials: true,
+  }),
+);
