@@ -1,5 +1,4 @@
 org: willsamuel
-# app: serverless-todo-app-app
 service:
   name: serverless-todo-app
 

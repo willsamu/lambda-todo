@@ -1,7 +1,8 @@
 # lambda-todo
 
 Udacity Cloud Developer Nanodegree Lambda Project.
-Implemented using only AWS Lambda, AWS API Gateway, AWS DynamoDB, AWS S3 and Auth0 to create a Todo-App.
+
+Implemented with the serverless framework using only AWS Lambda, AWS API Gateway, AWS DynamoDB, AWS S3 and Auth0 to create a Todo-App.
 
 # Setup
 
