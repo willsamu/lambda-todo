@@ -14,17 +14,11 @@ export const handler = middy(
     logger.info("Event: ", { event });
     const listTodosResult = await listTodos(getUserId(event));
 
-    if (listTodosResult.Items.length !== 0)
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          items: listTodosResult.Items,
-        }),
-      };
-
     return {
-      statusCode: 404,
-      body: "",
+      statusCode: 200,
+      body: JSON.stringify({
+        items: listTodosResult.Items,
+      }),
     };
   },
 );

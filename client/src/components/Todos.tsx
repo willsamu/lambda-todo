@@ -51,7 +51,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
         name: this.state.newTodoName,
         dueDate
       })
-      console.log(`Todo reacieved: ${newTodo}`)
+      console.log(`Todo received: ${newTodo}`)
       this.setState({
         todos: [...this.state.todos, newTodo],
         newTodoName: ''
